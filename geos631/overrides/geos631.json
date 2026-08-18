@@ -1,0 +1,69 @@
+{
+  "@jupyterlab/mainmenu-extension:plugin": {
+    "menus": [
+      {
+        "id": "jp-mainmenu-file",
+        "items": [
+          {
+            "command": "hub:logout",
+            "disabled": true
+          }
+        ]
+      },
+      {
+        "id": "jp-mainmenu-help",
+        "items": [
+          {
+            "command": "help:launch-classic-notebook",
+            "disabled": true
+          }
+        ]
+      }
+    ]
+  },
+  "@jupyterlab/application-extension:context-menu": {
+    "contextMenu": [
+      {
+        "command": "filebrowser:share-main",
+        "selector": ".jp-DirListing-item[data-isdir]",
+        "disabled": true
+      }
+    ]
+  },
+  "opensarlab_frontend:plugin": {
+    "controlbtn": {
+      "enabled": true,
+      "rank": 1110
+    },
+    "doc_link": {
+      "enabled": true,
+      "rank": 1100
+    },
+    "gifcap_btn": {
+      "enabled": true,
+      "rank": 1025
+    },
+    "oslnotify": {
+      "enabled": true,
+      "note_type": "calendar"
+    },
+    "profile_label": {
+      "enabled": true,
+      "rank": 1050
+    }
+  },
+  "nbgitpuller-jl-interface:plugin": {
+    "repos": [
+      {
+        "repoUrl": "https://github.com/ASFOpenSARlab/opensarlab-envs.git",
+        "branch": "main",
+        "destPath": "conda_environments"
+      },
+      {
+        "repoUrl": "https://github.com/uafgeoteach/GEOS631_FoG",
+        "branch": "master",
+        "destPath": "Data_Recipe_Jupyter_Books/GEOS_631_Labs"
+      }
+    ]
+  }
+}
