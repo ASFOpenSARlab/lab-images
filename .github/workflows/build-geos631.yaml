@@ -5,8 +5,7 @@ on:
     inputs:
       tag_override:
         description: "(Optional) docker tag override"
-        type: environment
-        default: test
+        type: string
   push:
     paths:
       - geos631/**
