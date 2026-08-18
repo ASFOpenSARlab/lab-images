@@ -1,11 +1,7 @@
 ---
 name: Deploy Cluster CDK
 on:
-  workflow_dispatch:
-    inputs:
-      tag_override:
-        description: "(Optional) docker tag override"
-        type: string
+  workflow_dispatch: {}
   push:
     paths:
       - geos631/**
