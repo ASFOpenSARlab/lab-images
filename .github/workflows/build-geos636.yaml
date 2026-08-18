@@ -1,0 +1,24 @@
+---
+name: geos636 - Programming and Automation for Geosciences
+on:
+  workflow_dispatch: {}
+  push:
+    paths:
+      - geos636/**
+    branches:
+      - main
+    tags:
+      - "v*.*.*"
+
+jobs:
+  setup:
+    uses: ASFOpenSARlab/osl-utils/.github/workflows/reusable-setup-env.yaml@v1.2.1
+    with:
+      tagname: ${{ github.ref_name }}
+  build_image:
+    needs:
+      - setup
+    uses: ASFOpenSARlab/osl-utils/.github/workflows/reusable-docker-build.yaml@v1.2.1
+    with:
+      image-name: geos636
+      dockerfile: geos636/Dockerfile
