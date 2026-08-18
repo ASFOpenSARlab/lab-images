@@ -14,7 +14,7 @@ jobs:
   setup:
     uses: ASFOpenSARlab/osl-utils/.github/workflows/reusable-setup-env.yaml@v1.2.1
     with:
-      tagname: ${{ inputs.tag_override || github.ref_name }}
+      tagname: ${{ github.ref_name }}
   build_image:
     needs:
       - setup
