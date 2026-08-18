@@ -1,12 +1,7 @@
 ---
 name: Deploy Cluster CDK
 on:
-  workflow_dispatch:
-    inputs:
-      tag_override:
-        description: "(Optional) docker tag override"
-        type: environment
-        default: test
+  workflow_dispatch: {}
   push:
     paths:
       - geos631/**
@@ -15,20 +10,16 @@ on:
     tags:
       - "v*.*.*"
 
-env:
-  IMAGE_NAME: geos631
-  JUPYTERHUB_HUB_HELM_VERSION: ${{ var.JUPYTERHUB_HUB_HELM_VERSION || 4.3.5 }}
-
 jobs:
   setup:
     uses: ASFOpenSARlab/osl-utils/.github/workflows/reusable-setup-env.yaml@v1.2.1
     with:
-      tagname: ${{ inputs.tag_override || github.ref_name }}
+      tagname: ${{ github.ref_name }}
   build_image:
     needs:
       - setup
     uses: ASFOpenSARlab/osl-utils/.github/workflows/reusable-docker-build.yaml@v1.2.1
     with:
-      image-name: ${{ env.IMAGE_NAME }}
+      image-name: geos631
       dockerfile: geos631/Dockerfile
-      build-args: JUPYTERHUB_HUB_HELM_VERSION=${{ env.JUPYTERHUB_HUB_HELM_VERSION }}
+      build-args: JUPYTERHUB_HUB_HELM_VERSION=${{ vars.JUPYTERHUB_HUB_HELM_VERSION || '4.3.5' }}
