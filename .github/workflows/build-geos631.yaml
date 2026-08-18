@@ -1,5 +1,5 @@
 ---
-name: Deploy Cluster CDK
+name: geos631 - Foundations of Geophysics
 on:
   workflow_dispatch: {}
   push:
