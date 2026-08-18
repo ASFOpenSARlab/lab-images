@@ -22,4 +22,3 @@ jobs:
     with:
       image-name: geos631
       dockerfile: geos631/Dockerfile
-      build-args: JUPYTERHUB_HUB_HELM_VERSION=${{ vars.JUPYTERHUB_HUB_HELM_VERSION || '4.3.5' }}
