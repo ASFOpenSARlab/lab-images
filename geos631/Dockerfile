@@ -10,11 +10,13 @@ RUN chmod a+rx /etc/user_server_includes/hooks/geos631.sh
 
 USER jovyan
 
-# Run Locally:
 # docker \
 #     run \
 #     -it \
 #     -p 8888:8888 \
-#     -u root \
-#     -v $PWD/geos631/hooks/geos631.sh:/usr/local/bin/before-notebook.d/start.sh
-#     geos631
+#     --entrypoint bash \
+#     ghcr.io/asfopensarlab/geos631 \
+#         -c " \
+#               /etc/user_server_includes/hooks/geos631.sh &&  \
+#               tini -g -- start.sh start-notebook.py \
+#            "

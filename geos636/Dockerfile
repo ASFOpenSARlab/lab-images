@@ -15,6 +15,9 @@ USER jovyan
 #     run \
 #     -it \
 #     -p 8888:8888 \
-#     -u root \
-#     -v $PWD/geos636/hooks/geos636.sh:/usr/local/bin/before-notebook.d/start.sh
-#     geos636
+#     --entrypoint bash \
+#     ghcr.io/asfopensarlab/geos636 \
+#         -c " \
+#               /etc/user_server_includes/hooks/geos636.sh &&  \
+#               tini -g -- start.sh start-notebook.py \
+#            "
