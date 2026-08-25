@@ -9,14 +9,3 @@ COPY geos631/overrides/geos631.json /etc/user_server_includes/overrides/geos631.
 RUN chmod a+rx /etc/user_server_includes/hooks/geos631.sh
 
 USER jovyan
-
-# docker \
-#     run \
-#     -it \
-#     -p 8888:8888 \
-#     --entrypoint bash \
-#     ghcr.io/asfopensarlab/geos631 \
-#         -c " \
-#               /etc/user_server_includes/hooks/geos631.sh &&  \
-#               tini -g -- start.sh start-notebook.py \
-#            "

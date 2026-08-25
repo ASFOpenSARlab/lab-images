@@ -9,15 +9,3 @@ COPY geos636/overrides/geos636.json /etc/user_server_includes/overrides/geos636.
 RUN chmod a+rx /etc/user_server_includes/hooks/geos636.sh
 
 USER jovyan
-
-# Run Locally:
-# docker \
-#     run \
-#     -it \
-#     -p 8888:8888 \
-#     --entrypoint bash \
-#     ghcr.io/asfopensarlab/geos636 \
-#         -c " \
-#               /etc/user_server_includes/hooks/geos636.sh &&  \
-#               tini -g -- start.sh start-notebook.py \
-#            "
