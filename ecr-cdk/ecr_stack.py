@@ -17,6 +17,5 @@ class ECRRepositoryStack(Stack):
         _image_repository = ecr.Repository(
             self,
             "lab_images",
-            empty_on_delete=True,
             repository_name="lab_images",
         )
