@@ -19,6 +19,9 @@ on: # yamllint disable-line rule:truthy
       - main
     tags:
       - "v*.*.*"
+permissions:
+  contents: read
+  packages: read
 env:
   cdk_image: ghcr.io/asfopensarlab/cdk-env
 jobs:
