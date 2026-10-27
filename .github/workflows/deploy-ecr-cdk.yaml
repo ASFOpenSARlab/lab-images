@@ -24,6 +24,7 @@ permissions:
   packages: read
 env:
   cdk_image: ghcr.io/asfopensarlab/cdk-env
+  JSII_RUNTIME_PACKAGE_CACHE: disabled
 jobs:
   setup:
     uses: ASFOpenSARlab/osl-utils/.github/workflows/reusable-setup-env.yaml@v1.2.2
@@ -45,6 +46,7 @@ jobs:
           inputs.cdk_deploy_env == 'prod' && 'prod' ||
           needs.setup.outputs.deploy_prefix
         }}
+      LAB_IMAGE_NAMES: "${{ vars.LAB_IMAGE_NAMES }}"
     runs-on: ubuntu-latest
     container: ghcr.io/asfopensarlab/osl-utils:v1.2.2
     needs:
