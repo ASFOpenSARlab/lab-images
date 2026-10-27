@@ -14,7 +14,7 @@ class ECRRepositoryStack(Stack):
         super().__init__(scope, construct_id, **kwargs)
 
         ### ECR
-        LAB_IMAGE_NAMES = os.getenv("LAB_IMAGE_NAMES")
+        LAB_IMAGE_NAMES = os.getenv("LAB_IMAGE_NAMES").split()
         for lab_name in LAB_IMAGE_NAMES:
             ecr.Repository(
                 self,
