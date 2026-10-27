@@ -1,15 +1,11 @@
 """Stack for ECR Repository"""
 
+import os
+
 from constructs import Construct
 
 from aws_cdk import Stack
 from aws_cdk import aws_ecr as ecr
-
-ECR_REPOSITORIES = [
-    "deployment-opensarlab-container_sar"
-    "geos631",
-    "geos636",
-]
 
 class ECRRepositoryStack(Stack):
     """ECR Stack"""
@@ -18,9 +14,10 @@ class ECRRepositoryStack(Stack):
         super().__init__(scope, construct_id, **kwargs)
 
         ### ECR
-        for repo in ECR_REPOSITORIES:
+        LAB_IMAGE_NAMES = os.getenv("LAB_IMAGE_NAMES")
+        for lab_name in LAB_IMAGE_NAMES:
             ecr.Repository(
                 self,
-                f"{repo}_image",
-                repository_name=repo,
+                f"{lab_name}_image",
+                repository_name=lab_name,
             )

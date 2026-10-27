@@ -46,6 +46,7 @@ jobs:
           inputs.cdk_deploy_env == 'prod' && 'prod' ||
           needs.setup.outputs.deploy_prefix
         }}
+      LAB_IMAGE_NAMES: "${{ vars.LAB_IMAGE_NAMES }}"
     runs-on: ubuntu-latest
     container: ghcr.io/asfopensarlab/osl-utils:v1.2.2
     needs:
