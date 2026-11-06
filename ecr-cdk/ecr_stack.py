@@ -51,8 +51,8 @@ class ECRRepositoryStack(Stack):
         deploy_image_role = iam.Role(
             self,
             "DeployImageRole",
-            assumed_by=iam.WebIdentityPrincipal(
-                oidc_provider.open_id_connect_provider_arn,
+            assumed_by=iam.OpenIdConnectPrincipal(
+                oidc_provider,
                 {
                     "StringEquals":{
                         "token.actions.githubusercontent.com:aud": "sts.amazonaws.com",
