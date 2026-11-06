@@ -27,7 +27,7 @@ env:
   JSII_RUNTIME_PACKAGE_CACHE: disabled
 jobs:
   setup:
-    uses: ASFOpenSARlab/osl-utils/.github/workflows/reusable-setup-env.yaml@v1.2.2
+    uses: ASFOpenSARlab/osl-utils/.github/workflows/reusable-setup-env.yaml@v1.2.3
     with:
       tagname: ${{ inputs.tagname || github.ref_name }}
   use-cdk-image:
@@ -48,7 +48,7 @@ jobs:
         }}
       LAB_IMAGE_NAMES: "${{ vars.LAB_IMAGE_NAMES }}"
     runs-on: ubuntu-latest
-    container: ghcr.io/asfopensarlab/osl-utils:v1.2.2
+    container: ghcr.io/asfopensarlab/osl-utils:v1.2.3
     needs:
       - setup
     # Allow cdk_deploy_env to override environment for deploy
