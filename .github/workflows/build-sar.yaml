@@ -1,5 +1,5 @@
 ---
-name: sar
+name: SAR
 on:
   workflow_dispatch: {}
   push:
