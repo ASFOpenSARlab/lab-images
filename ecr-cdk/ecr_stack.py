@@ -58,7 +58,7 @@ class ECRRepositoryStack(Stack):
                         "token.actions.githubusercontent.com:aud": "sts.amazonaws.com",
                     },
                     "StringLike": {
-                        "token.actions.githubusercontent.com:sub" "repo:ASFOpenSARlab@83985517/lab-images@1338528871"
+                        "token.actions.githubusercontent.com:sub" "repo:ASFOpenSARlab@83985517/lab-images@1338528871:*"
                     },
                 },
             ),
