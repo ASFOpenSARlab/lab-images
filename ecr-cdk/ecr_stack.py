@@ -8,6 +8,7 @@ from aws_cdk import (
     Stack,
     aws_ecr as ecr,
     aws_iam as iam,
+    CfnOutput,
 )
 
 class ECRRepositoryStack(Stack):
@@ -70,4 +71,11 @@ class ECRRepositoryStack(Stack):
                     },
                 },
             ),
+        )
+
+        CfnOutput(
+            self,
+            "DeployImageRoleArn",
+            value=deploy_image_role.role_arn,
+            description="Arn for Image Deployment Role",
         )
