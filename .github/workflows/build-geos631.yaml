@@ -22,3 +22,4 @@ jobs:
     with:
       image-name: geos631
       dockerfile: geos631/Dockerfile
+      push-to-aws: true
