@@ -52,13 +52,13 @@ class ECRRepositoryStack(Stack):
             self,
             "DeployImageRole",
             assumed_by=iam.OpenIdConnectPrincipal(
-                oidc_provider,
+                open_id_connect_provider=oidc_provider,
                 conditions={
                     "StringEquals":{
                         "token.actions.githubusercontent.com:aud": "sts.amazonaws.com",
                     },
                     "StringLike": {
-                        "token.actions.githubusercontent.com:sub" "repo:ASFOpenSARlab@83985517/lab-images@1338528871:*"
+                        "token.actions.githubusercontent.com:sub": "repo:ASFOpenSARlab@83985517/lab-images@1338528871:*"
                     },
                 },
             ),
