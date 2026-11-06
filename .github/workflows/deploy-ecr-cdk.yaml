@@ -71,6 +71,8 @@ jobs:
           role-to-assume: arn:aws:iam::${{vars.AWS_ACCOUNT_NUMBER}}:role/${{vars.OIDC_IAM_ROLE}}
           aws-region: ${{vars.AWS_DEFAULT_REGION}}
       - name: Deploy ECR
+        with:
+          OIDC_PROVIDER_ARN: ${{ secrets.OIDC_PROVIDER_ARN }}
         id: deploy-ecr
         run: |-
           echo "Hello from inside ecr-cdk (${{ env.image-tag }})"

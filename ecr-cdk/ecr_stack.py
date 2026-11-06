@@ -41,12 +41,20 @@ class ECRRepositoryStack(Stack):
 
 
         ### OIDC DEPLOY ROLE
-        oidc_provider = iam.OidcProviderNative(
-            self,
-            "GitHubProvider",
-            url="https://token.actions.githubusercontent.com",
-            client_ids=["https://github.com"],
-        )
+        # Get or create OIDC provider
+        if os.getenv("OIDC_PROVIDER_ARN"):
+            oidc_provider = iam.OidcProviderNative.from_oidc_provider_arn(
+                self,
+                "GitHubProvider",
+                os.getenv("OIDC_PROVIDER_ARN"),
+            )
+        else:
+            oidc_provider = iam.OidcProviderNative(
+                self,
+                "GitHubProvider",
+                url="https://token.actions.githubusercontent.com",
+                client_ids=["https://github.com"],
+            )
 
         deploy_image_role = iam.Role(
             self,
