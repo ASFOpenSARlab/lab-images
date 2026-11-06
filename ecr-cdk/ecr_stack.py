@@ -38,3 +38,28 @@ class ECRRepositoryStack(Stack):
             )
 
             ECR.add_to_resource_policy(ecr_policy)
+
+
+        ### OIDC DEPLOY ROLE
+        oidc_provider = iam.OidcProviderNative(
+            self,
+            "GitHubProvider",
+            url="https://token.actions.githubusercontent.com",
+            client_ids=["https://github.com"],
+        )
+
+        deploy_image_role = iam.Role(
+            self,
+            "DeployImageRole",
+            assumed_by=iam.WebIdentityPrincipal(
+                oidc_provider.open_id_connect_provider_arn,
+                {
+                    "StringEquals":{
+                        "token.actions.githubusercontent.com:aud": "sts.amazonaws.com",
+                    },
+                    "StringLike": {
+                        "token.actions.githubusercontent.com:sub" "repo:ASFOpenSARlab@83985517/lab-images@1338528871"
+                    },
+                },
+            ),
+        )
