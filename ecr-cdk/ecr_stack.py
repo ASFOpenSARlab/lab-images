@@ -53,7 +53,7 @@ class ECRRepositoryStack(Stack):
             "DeployImageRole",
             assumed_by=iam.OpenIdConnectPrincipal(
                 oidc_provider,
-                {
+                conditions={
                     "StringEquals":{
                         "token.actions.githubusercontent.com:aud": "sts.amazonaws.com",
                     },
