@@ -73,6 +73,13 @@ class ECRRepositoryStack(Stack):
             ),
         )
 
+        deploy_image_role.add_to_policy(
+            iam.PolicyStatement(
+                actions=["ecr:GetAuthorizationToken"],
+                resources=["*"]
+            )
+        )
+
         CfnOutput(
             self,
             "DeployImageRoleArn",
