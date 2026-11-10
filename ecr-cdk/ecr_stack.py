@@ -66,18 +66,36 @@ class ECRRepositoryStack(Stack):
                     "StringEquals":{
                         "token.actions.githubusercontent.com:aud": "sts.amazonaws.com",
                     },
-                    "StringLike": {
+                    "StringLike": { # This must be parameterized
                         "token.actions.githubusercontent.com:sub": "repo:ASFOpenSARlab@83985517/lab-images@1338528871:*"
                     },
                 },
             ),
         )
 
+        lab_image_names = os.getenv("LAB_IMAGE_NAMES").split()
+
         deploy_image_role.add_to_policy(
             iam.PolicyStatement(
                 actions=[
-                    "ecr:GetAuthorizationToken",
+                    "ecr:CompleteLayerUpload",
+                    "ecr:UploadLayerPart",
                     "ecr:InitiateLayerUpload",
+                    "ecr:BatchCheckLayerAvailability",
+                    "ecr:PutImage",
+                    "ecr:BatchGetImage",
+                ],
+                resources=[
+                    f"arn:aws:{self.account}:{self.region}:repository/{name}"
+                    for name in lab_image_names
+                ]
+            )
+        )
+
+        deploy_image_role.add_to_policy(
+            iam.PolicyStatement(
+                actions=[
+                    "ecr:GetAuthorizationToken"
                 ],
                 resources=["*"]
             )

@@ -69,7 +69,8 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: arn:aws:iam::${{vars.AWS_ACCOUNT_NUMBER}}:role/${{vars.OIDC_IAM_ROLE}}
-          aws-region: ${{vars.AWS_DEFAULT_REGION}}
+          aws-region: ${{ vars.AWS_DEFAULT_REGION }}
+          image-names: ${{ vars.LAB_IMAGE_NAMES }}
       - name: Deploy ECR
         id: deploy-ecr
         env:
