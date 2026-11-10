@@ -18,13 +18,13 @@ permissions:
 
 jobs:
   setup:
-    uses: ASFOpenSARlab/osl-utils/.github/workflows/reusable-setup-env.yaml@38e817b
+    uses: ASFOpenSARlab/osl-utils/.github/workflows/reusable-setup-env.yaml@v1.2.6-alpha.1
     with:
       tagname: ${{ github.ref_name }}
   build_image:
     needs:
       - setup
-    uses: ASFOpenSARlab/osl-utils/.github/workflows/reusable-docker-build.yaml@38e817b
+    uses: ASFOpenSARlab/osl-utils/.github/workflows/reusable-docker-build.yaml@v1.2.6-alpha.1
     with:
       image-name: geos631
       dockerfile: geos631/Dockerfile
