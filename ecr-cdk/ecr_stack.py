@@ -75,7 +75,10 @@ class ECRRepositoryStack(Stack):
 
         deploy_image_role.add_to_policy(
             iam.PolicyStatement(
-                actions=["ecr:GetAuthorizationToken"],
+                actions=[
+                    "ecr:GetAuthorizationToken",
+                    "ecr:InitiateLayerUpload",
+                ],
                 resources=["*"]
             )
         )
