@@ -86,7 +86,7 @@ class ECRRepositoryStack(Stack):
                     "ecr:BatchGetImage",
                 ],
                 resources=[
-                    f"arn:aws:{self.account}:{self.region}:repository/{name}"
+                    f"arn:aws:ecr:{self.region}:{self.account}:repository/{name}"
                     for name in lab_image_names
                 ]
             )
