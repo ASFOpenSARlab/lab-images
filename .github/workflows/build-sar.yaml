@@ -10,16 +10,24 @@ on:
     tags:
       - "v*.*.*"
 
+permissions:
+  contents: read
+  packages: write
+  attestations: write
+  id-token: write
+
 jobs:
   setup:
-    uses: ASFOpenSARlab/osl-utils/.github/workflows/reusable-setup-env.yaml@v1.2.3
+    uses: ASFOpenSARlab/osl-utils/.github/workflows/reusable-setup-env.yaml@v1.2.6
     with:
       tagname: ${{ github.ref_name }}
   build_image:
     needs:
       - setup
-    uses: ASFOpenSARlab/osl-utils/.github/workflows/reusable-docker-build.yaml@v1.2.3
+    uses: ASFOpenSARlab/osl-utils/.github/workflows/reusable-docker-build.yaml@v1.2.6
     with:
       image-name: deployment-opensarlab-container_sar
       dockerfile: sar/Dockerfile
       push-to-aws: true
+      use-oidc: true
+      role-to-assume: ${{ vars.OIDC_ROLE_ARN }}
