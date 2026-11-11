@@ -22,7 +22,6 @@ class ECRRepositoryStack(Stack):
         ecr_policy = iam.PolicyStatement(
             sid="AllowPullFromOtherAccount",
             effect=iam.Effect.ALLOW,
-            # principals=[iam.ArnPrincipal(f"arn:aws:*:{self.region}:*")], # replace first * with ec2 if possible
             principals=[iam.AnyPrincipal()],
             actions=[
                 "ecr:BatchCheckLayerAvailability",
