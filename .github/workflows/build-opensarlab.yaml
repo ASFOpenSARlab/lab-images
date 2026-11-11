@@ -1,5 +1,5 @@
 ---
-name: SAR
+name: OpenSARLab
 on:
   workflow_dispatch:
     inputs:
@@ -9,7 +9,7 @@ on:
         default: false
   push:
     paths:
-      - sar/**
+      - opensarlab/**
     branches:
       - main
     tags:
@@ -31,8 +31,8 @@ jobs:
       - setup
     uses: ASFOpenSARlab/osl-utils/.github/workflows/reusable-docker-build.yaml@v1.2.6
     with:
-      image-name: deployment-opensarlab-container_sar
-      dockerfile: sar/Dockerfile
+      image-name: opensarlab
+      dockerfile: opensarlab/Dockerfile
       push-to-aws: ${{ inputs.deploy_to_ecr }}
       use-oidc: true
       role-to-assume: ${{ vars.OIDC_ROLE_ARN }}
