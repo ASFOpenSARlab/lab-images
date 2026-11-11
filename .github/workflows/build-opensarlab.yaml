@@ -1,0 +1,38 @@
+---
+name: OpenSARLab
+on:
+  workflow_dispatch:
+    inputs:
+      deploy_to_ecr:
+        description: Deploy To ECR as Well
+        type: boolean
+        default: false
+  push:
+    paths:
+      - opensarlab/**
+    branches:
+      - main
+    tags:
+      - "v*.*.*"
+
+permissions:
+  contents: read
+  packages: write
+  attestations: write
+  id-token: write
+
+jobs:
+  setup:
+    uses: ASFOpenSARlab/osl-utils/.github/workflows/reusable-setup-env.yaml@v1.2.6
+    with:
+      tagname: ${{ github.ref_name }}
+  build_image:
+    needs:
+      - setup
+    uses: ASFOpenSARlab/osl-utils/.github/workflows/reusable-docker-build.yaml@v1.2.6
+    with:
+      image-name: opensarlab
+      dockerfile: opensarlab/Dockerfile
+      push-to-aws: ${{ inputs.deploy_to_ecr }}
+      use-oidc: true
+      role-to-assume: ${{ vars.OIDC_ROLE_ARN }}

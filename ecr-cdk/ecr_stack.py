@@ -1,10 +1,17 @@
 """Stack for ECR Repository"""
 
+import os
+from pathlib import Path
+import configparser
+
 from constructs import Construct
 
-from aws_cdk import Stack
-from aws_cdk import aws_ecr as ecr
-
+from aws_cdk import (
+    Stack,
+    aws_ecr as ecr,
+    aws_iam as iam,
+    CfnOutput,
+)
 
 class ECRRepositoryStack(Stack):
     """ECR Stack"""
@@ -12,11 +19,104 @@ class ECRRepositoryStack(Stack):
     def __init__(self, scope: Construct, construct_id: str, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
 
+        ecr_policy = iam.PolicyStatement(
+            sid="AllowPullFromOtherAccount",
+            effect=iam.Effect.ALLOW,
+            principals=[iam.AnyPrincipal()],
+            actions=[
+                "ecr:BatchCheckLayerAvailability",
+                "ecr:GetDownloadUrlForLayer",
+                "ecr:BatchGetImage"
+            ],
+            conditions={
+                "StringEquals": {
+                    "aws:RequestedRegion": f"{self.region}",
+                }
+            },
+        )
 
         ### ECR
-        _image_repository = ecr.Repository(
+        LAB_IMAGE_NAMES = os.getenv("LAB_IMAGE_NAMES").split()
+        for lab_name in LAB_IMAGE_NAMES:
+            ECR = ecr.Repository(
+                self,
+                f"{lab_name}_image",
+                repository_name=lab_name,
+            )
+
+            ECR.add_to_resource_policy(ecr_policy)
+
+
+        ### OIDC DEPLOY ROLE
+        # Get or create OIDC provider
+        if os.getenv("OIDC_PROVIDER_ARN"):
+            oidc_provider = iam.OidcProviderNative.from_oidc_provider_arn(
+                self,
+                "GitHubProvider",
+                os.getenv("OIDC_PROVIDER_ARN"),
+            )
+        else:
+            oidc_provider = iam.OidcProviderNative(
+                self,
+                "GitHubProvider",
+                url="https://token.actions.githubusercontent.com",
+                client_ids=["https://github.com"],
+            )
+
+        # Get github repos allowed to push to ECR
+        github_repos_file = Path(__file__).resolve().parent / "github_repos.conf"
+        config = configparser.ConfigParser(allow_no_value=True)
+        config.optionxform = str
+        config.read(github_repos_file)
+        git_repo_list = list(config["GitHubRepos"])
+
+        deploy_image_role = iam.Role(
             self,
-            "lab_images",
-            empty_on_delete=True,
-            repository_name="lab_images",
+            "DeployImageRole",
+            assumed_by=iam.OpenIdConnectPrincipal(
+                open_id_connect_provider=oidc_provider,
+                conditions={
+                    "StringEquals":{
+                        "token.actions.githubusercontent.com:aud": "sts.amazonaws.com",
+                    },
+                    "ForAnyValue:StringLike": {
+                        "token.actions.githubusercontent.com:sub": [f"repo:{repos}:*" for repos in git_repo_list],
+                    },
+                },
+            ),
+        )
+
+        lab_image_names = os.getenv("LAB_IMAGE_NAMES").split()
+
+        deploy_image_role.add_to_policy(
+            iam.PolicyStatement(
+                actions=[
+                    "ecr:CompleteLayerUpload",
+                    "ecr:UploadLayerPart",
+                    "ecr:InitiateLayerUpload",
+                    "ecr:BatchCheckLayerAvailability",
+                    "ecr:PutImage",
+                    "ecr:BatchGetImage",
+                ],
+                resources=[
+                    f"arn:aws:ecr:{self.region}:{self.account}:repository/{name}"
+                    for name in lab_image_names
+                ]
+            )
+        )
+
+        deploy_image_role.add_to_policy(
+            iam.PolicyStatement(
+                actions=[
+                    "ecr:GetAuthorizationToken"
+                ],
+                resources=["*"]
+            )
+        )
+
+        CfnOutput(
+            self,
+            "DeployImageRoleArn",
+            value=deploy_image_role.role_arn,
+            description="Arn for Image Deployment Role",
         )

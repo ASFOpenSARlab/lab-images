@@ -24,9 +24,10 @@ permissions:
   packages: read
 env:
   cdk_image: ghcr.io/asfopensarlab/cdk-env
+  JSII_RUNTIME_PACKAGE_CACHE: disabled
 jobs:
   setup:
-    uses: ASFOpenSARlab/osl-utils/.github/workflows/reusable-setup-env.yaml@v1.2.2
+    uses: ASFOpenSARlab/osl-utils/.github/workflows/reusable-setup-env.yaml@v1.2.3
     with:
       tagname: ${{ inputs.tagname || github.ref_name }}
   use-cdk-image:
@@ -45,8 +46,9 @@ jobs:
           inputs.cdk_deploy_env == 'prod' && 'prod' ||
           needs.setup.outputs.deploy_prefix
         }}
+      LAB_IMAGE_NAMES: "${{ vars.LAB_IMAGE_NAMES }}"
     runs-on: ubuntu-latest
-    container: ghcr.io/asfopensarlab/osl-utils:v1.2.2
+    container: ghcr.io/asfopensarlab/osl-utils:v1.2.3
     needs:
       - setup
     # Allow cdk_deploy_env to override environment for deploy
@@ -67,9 +69,12 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: arn:aws:iam::${{vars.AWS_ACCOUNT_NUMBER}}:role/${{vars.OIDC_IAM_ROLE}}
-          aws-region: ${{vars.AWS_DEFAULT_REGION}}
+          aws-region: ${{ vars.AWS_DEFAULT_REGION }}
+          image-names: ${{ vars.LAB_IMAGE_NAMES }}
       - name: Deploy ECR
         id: deploy-ecr
+        env:
+          OIDC_PROVIDER_ARN: ${{ secrets.OIDC_PROVIDER_ARN }}
         run: |-
           echo "Hello from inside ecr-cdk (${{ env.image-tag }})"
           pwd && ls
