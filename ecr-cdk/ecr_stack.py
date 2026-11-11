@@ -1,6 +1,8 @@
 """Stack for ECR Repository"""
 
 import os
+from pathlib import Path
+import configparser
 
 from constructs import Construct
 
@@ -20,8 +22,8 @@ class ECRRepositoryStack(Stack):
         ecr_policy = iam.PolicyStatement(
             sid="AllowPullFromOtherAccount",
             effect=iam.Effect.ALLOW,
-            # principals=[iam.ArnPrincipal(f"arn:aws:*:{self.region}:*")], # replace first * with ec2 if possible
-            principals=[iam.ArnPrincipal("*")],
+            principals=[iam.ArnPrincipal(f"arn:aws:*:{self.region}:*")], # replace first * with ec2 if possible
+            # principals=[iam.ArnPrincipal("*")],
             actions=[
                 "ecr:BatchCheckLayerAvailability",
                 "ecr:GetDownloadUrlForLayer",
@@ -57,6 +59,13 @@ class ECRRepositoryStack(Stack):
                 client_ids=["https://github.com"],
             )
 
+        # Get github repos allowed to push to ECR
+        github_repos_file = Path(__file__).resolve().parent / "github_repos.conf"
+        config = configparser.ConfigParser(allow_no_value=True)
+        config.optionxform = str
+        config.read(github_repos_file)
+        git_repo_list = list(config["GitHubRepos"])
+
         deploy_image_role = iam.Role(
             self,
             "DeployImageRole",
@@ -66,8 +75,8 @@ class ECRRepositoryStack(Stack):
                     "StringEquals":{
                         "token.actions.githubusercontent.com:aud": "sts.amazonaws.com",
                     },
-                    "StringLike": { # This must be parameterized
-                        "token.actions.githubusercontent.com:sub": "repo:ASFOpenSARlab@83985517/lab-images@1338528871:*"
+                    "ForAnyValue:StringLike": {
+                        "token.actions.githubusercontent.com:sub": [f"repo:{repos}:*" for repos in git_repo_list],
                     },
                 },
             ),
