@@ -70,10 +70,6 @@ RUN apt-get install --no-install-recommends --fix-missing -y \
     gmt \
     --
 
-# Update conda and mamba: this breaks things in the hook, need to play with it more
-# Updating just conda and mamba will auto-remove pip, so force pip to update to remain
-#RUN mamba update -c conda-forge -y conda mamba pip
-
 # ignore DL3059 to make the two codeblocks distinct
 # hadolint ignore=DL3059
 RUN mamba install -c conda-forge -y \
@@ -99,7 +95,7 @@ RUN mamba install -c conda-forge -y \
     ipywidgets \
     #jupyter-ai \
     jupyterlab-git \
-    # Coordinate with opensciencelab.yaml
+    # Coordinate with cluster dependency versions
     'jupyterhub>=5.4.6' \
     'jupyter_server>=2.18.0' \
     panel
