@@ -23,12 +23,17 @@ class ECRRepositoryStack(Stack):
             sid="AllowPullFromOtherAccount",
             effect=iam.Effect.ALLOW,
             # principals=[iam.ArnPrincipal(f"arn:aws:*:{self.region}:*")], # replace first * with ec2 if possible
-            principals=[iam.ArnPrincipal("*")],
+            principals=[iam.AnyPrincipal()],
             actions=[
                 "ecr:BatchCheckLayerAvailability",
                 "ecr:GetDownloadUrlForLayer",
                 "ecr:BatchGetImage"
-            ]
+            ],
+            conditions={
+                "StringEquals": {
+                    "aws:RequestedRegion": f"{self.region}",
+                }
+            },
         )
 
         ### ECR
