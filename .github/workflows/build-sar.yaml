@@ -1,7 +1,12 @@
 ---
 name: SAR
 on:
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      deploy_to_ecr:
+        description: Deploy To ECR as Well
+        type: boolean
+        default: false
   push:
     paths:
       - sar/**
@@ -28,6 +33,6 @@ jobs:
     with:
       image-name: deployment-opensarlab-container_sar
       dockerfile: sar/Dockerfile
-      push-to-aws: true
+      push-to-aws: ${{ inputs.deploy_to_ecr }}
       use-oidc: true
       role-to-assume: ${{ vars.OIDC_ROLE_ARN }}

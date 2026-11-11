@@ -1,7 +1,12 @@
 ---
 name: geos636 - Programming and Automation for Geosciences
 on:
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      deploy_to_ecr:
+        description: Deploy To ECR as Well
+        type: boolean
+        default: false
   push:
     paths:
       - geos636/**
@@ -28,7 +33,6 @@ jobs:
     with:
       image-name: geos636
       dockerfile: geos636/Dockerfile
-      push-to-aws: true
-      push-to-aws: true
+      push-to-aws: ${{ inputs.deploy_to_ecr }}
       use-oidc: true
       role-to-assume: ${{ vars.OIDC_ROLE_ARN }}
