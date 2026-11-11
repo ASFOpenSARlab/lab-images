@@ -1,7 +1,12 @@
 ---
 name: geos631 - Foundations of Geophysics
 on:
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      deploy_to_ecr:
+        description: If the action should deploy to ECR as well
+        type: boolean
+        default: false
   push:
     paths:
       - geos631/**
@@ -9,11 +14,6 @@ on:
       - main
     tags:
       - "v*.*.*"
-    inputs:
-      deploy_to_ecr:
-        description: If the action should deploy to ECR as well
-        type: boolean
-        default: false
 
 permissions:
   contents: read
