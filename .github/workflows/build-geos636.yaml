@@ -33,6 +33,6 @@ jobs:
     with:
       image-name: geos636
       dockerfile: geos636/Dockerfile
-      push-to-aws: ${{ inputs.deploy_to_ecr }}
+      push-to-aws: ${{ inputs.deploy_to_ecr || false }}
       use-oidc: true
       role-to-assume: ${{ vars.OIDC_ROLE_ARN }}
