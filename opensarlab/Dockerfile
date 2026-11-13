@@ -186,8 +186,10 @@ FROM quay.io/jupyter/base-notebook:2026-05-04
 USER root
 WORKDIR /
 
-# Copy over new files
-RUN cp -rn / /
+# Copy over modified directorys as unique layers 
+COPY /sys/ /sys/
+COPY /root/ /root/
+COPY /etc/ /etc/ 
 
 ## Re-run User configuration
 RUN chown -R jovyan:users "$HOME/" &&\
