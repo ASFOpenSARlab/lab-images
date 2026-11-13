@@ -1,6 +1,6 @@
 # 2026-05-04 is JupyterLab v4.5.7
 # https://quay.io/repository/jupyter/base-notebook?tab=tags
-FROM quay.io/jupyter/base-notebook:2026-05-04 AS release
+FROM quay.io/jupyter/base-notebook:2026-05-04 AS builder
 
 # Base Stage ****************************************************************
 USER root
@@ -174,9 +174,68 @@ RUN chown -R jovyan:users "$HOME/" &&\
     mamba shell init -s bash --root-prefix=/opt/conda/ &&\
     rm -rf /home/jovyan/..?* /home/jovyan/.[!.]* /home/jovyan/*
 
-# Stage 2: Squash everything into a single layer
-FROM scratch
-COPY --from=release / /
+#### Stage 2: Copy over installed software
+FROM quay.io/jupyter/base-notebook:2026-05-04
+
+## Rerun apt intalls
+RUN apt-get update && apt-get install --no-install-recommends -y \
+        software-properties-common \
+        git && \
+    apt-get install --no-install-recommends -y gpg-agent && \
+    add-apt-repository -y ppa:ubuntugis/ubuntugis-unstable && \
+    apt-get update && \
+    apt-get upgrade -y
+
+RUN apt-get install --no-install-recommends --fix-missing -y \
+    zip \
+    unzip \
+    wget \
+    vim \
+    rsync \
+    less \
+    snaphu \
+    curl \
+    ca-certificates \
+    openssh-client \
+    libglx-mesa0 \
+    emacs \
+    gnupg2 \
+    jq \
+    gfortran \
+    make \
+    proj-bin \
+    geotiff-bin \
+    libshp-dev \
+    libshp4 \
+    libhdf5-dev \
+    libnetcdf-dev \
+    libgdal-dev \
+    libgsl-dev \
+    gdal-bin \
+    default-jdk-headless \
+    texlive-xetex \
+    texlive-fonts-recommended \
+    texlive-plain-generic \
+    csh \
+    autoconf \
+    make \
+    libtiff5-dev \
+    liblapack-dev \
+    libgmt-dev \
+    gmt-dcw \
+    gmt-gshhg \
+    gmt 
+
+## Re-run User configuration
+RUN chown -R jovyan:users "$HOME/" &&\
+    addgroup -gid 599 elevation
+
+## Copy other modified files
+COPY --from=release /usr/local/bin/pixi /usr/local/bin/pixi
+COPY --from=release /opt/conda/         /opt/conda/
+COPY --from=release /usr/local/GMTSAR/  /usr/local/GMTSAR/
+COPY --from=release /home/jovyan/       /home/jovyan/ 
+COPY --from=release /etc/sudoers        /etc/sudoers
 
 ### GMTSAR
 ENV PATH=/usr/local/GMTSAR/bin:$PATH
