@@ -182,7 +182,8 @@ RUN chown -R jovyan:users "$HOME/" &&\
 RUN apt clean && \
     apt autoclean && \
     rm -rf /var/lib/apt/lists/* && \
-    apt autoremove --purge 
+    apt autoremove --purge && \
+    conda clean --force-pkgs-dirs
 
 #### Stage 2: Copy over installed software
 FROM quay.io/jupyter/base-notebook:2026-05-04
@@ -190,7 +191,7 @@ FROM quay.io/jupyter/base-notebook:2026-05-04
 USER root
 WORKDIR /
 
-# Copy  directories as unique layers
+# Copy directories as unique layers for parallelism 
 COPY --from=builder /etc/ /etc/
 COPY --from=builder /home/ /home/
 COPY --from=builder /opt/ /opt/
@@ -199,13 +200,6 @@ COPY --from=builder /srv/ /srv/
 COPY --from=builder /sys/ /sys/
 COPY --from=builder /usr/ /usr/
 COPY --from=builder /var/ /var/ 
-
-## Re-run User configuration
-RUN chown -R jovyan:users "$HOME/" &&\
-    addgroup -gid 599 elevation
-
-## Copy other modified files
-COPY --from=builder /etc/sudoers        /etc/sudoers
 
 ### GMTSAR
 ENV PATH=/usr/local/GMTSAR/bin:$PATH
