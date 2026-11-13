@@ -177,6 +177,9 @@ RUN chown -R jovyan:users "$HOME/" &&\
 #### Stage 2: Copy over installed software
 FROM quay.io/jupyter/base-notebook:2026-05-04
 
+USER root
+WORKDIR /
+
 ## Rerun apt intalls
 RUN apt-get update && apt-get install --no-install-recommends -y \
         software-properties-common \
