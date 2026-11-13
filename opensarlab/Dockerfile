@@ -175,10 +175,10 @@ RUN chown -R jovyan:users "$HOME/" &&\
     rm -rf /home/jovyan/..?* /home/jovyan/.[!.]* /home/jovyan/*
 
 # Clean things up
-RUN apt clean && \
-    apt autoclean && \
+RUN apt-get clean && \
+    apt-get autoclean && \
     rm -rf /var/lib/apt/lists/* && \
-    apt autoremove --purge && \
+    apt-get autoremove --purge && \
     conda clean --force-pkgs-dirs
 
 #### Stage 2: Copy over installed software
