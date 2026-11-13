@@ -186,10 +186,15 @@ FROM quay.io/jupyter/base-notebook:2026-05-04
 USER root
 WORKDIR /
 
-# Copy over modified directorys as unique layers 
-COPY --from=builder /sys/ /sys/
+# Copy  directories as unique layers
+COPY --from=builder /etc/ /etc/
+COPY --from=builder /home/ /home/
+COPY --from=builder /opt/ /opt/
 COPY --from=builder /root/ /root/
-COPY --from=builder /etc/ /etc/ 
+COPY --from=builder /srv/ /srv/
+COPY --from=builder /sys/ /sys/
+COPY --from=builder /usr/ /usr/
+COPY --from=builder /var/ /var/ 
 
 ## Re-run User configuration
 RUN chown -R jovyan:users "$HOME/" &&\
