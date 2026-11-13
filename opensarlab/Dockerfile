@@ -172,7 +172,7 @@ RUN chown -R jovyan:users "$HOME/" &&\
     mamba run -n base kernda --display-name base -o /opt/conda/share/jupyter/kernels/python3/kernel.json &&\
     mamba clean -y --all &&\
     mamba shell init -s bash --root-prefix=/opt/conda/ &&\
-    rm -rf /home/jovyan/..?* /home/jovyan/.[!.]* /home/jovyan/*+
+    rm -rf /home/jovyan/..?* /home/jovyan/.[!.]* /home/jovyan/*
 
 # Stage 2: Squash everything into a single layer
 FROM scratch
