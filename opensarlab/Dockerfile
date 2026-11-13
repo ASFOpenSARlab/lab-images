@@ -1,6 +1,6 @@
 # 2026-05-04 is JupyterLab v4.5.7
 # https://quay.io/repository/jupyter/base-notebook?tab=tags
-FROM quay.io/jupyter/base-notebook:2026-05-04 AS release
+FROM quay.io/jupyter/base-notebook:2026-05-04 AS builder
 
 # Base Stage ****************************************************************
 USER root
@@ -174,8 +174,34 @@ RUN chown -R jovyan:users "$HOME/" &&\
     mamba shell init -s bash --root-prefix=/opt/conda/ &&\
     rm -rf /home/jovyan/..?* /home/jovyan/.[!.]* /home/jovyan/*
 
+# Clean things up
+RUN apt-get clean && \
+    apt-get autoclean && \
+    rm -rf /var/lib/apt/lists/* && \
+    apt-get autoremove --purge && \
+    conda clean --force-pkgs-dirs
+
+#### Stage 2: Copy over installed software
+FROM quay.io/jupyter/base-notebook:2026-05-04
+
+USER root
+WORKDIR /
+
+# Copy directories as unique layers for parallelism 
+COPY --from=builder /etc/ /etc/
+COPY --from=builder /home/ /home/
+COPY --from=builder /opt/ /opt/
+COPY --from=builder /root/ /root/
+COPY --from=builder /srv/ /srv/
+COPY --from=builder /sys/ /sys/
+COPY --from=builder /usr/ /usr/
+COPY --from=builder /var/ /var/ 
+
 ### GMTSAR
 ENV PATH=/usr/local/GMTSAR/bin:$PATH
+
+# reset PIXI_HOME to location on persistent volume after install for storing workspaces.toml
+ENV PIXI_HOME=/home/jovyan/.pixi
 
 WORKDIR /home/jovyan
 USER jovyan
