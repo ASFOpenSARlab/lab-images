@@ -174,70 +174,26 @@ RUN chown -R jovyan:users "$HOME/" &&\
     mamba shell init -s bash --root-prefix=/opt/conda/ &&\
     rm -rf /home/jovyan/..?* /home/jovyan/.[!.]* /home/jovyan/*
 
+# Clean things up
+RUN apt clean && \
+    apt autoclean && \
+    rm -rf /var/lib/apt/lists/* && \
+    apt autoremove --purge 
+
 #### Stage 2: Copy over installed software
 FROM quay.io/jupyter/base-notebook:2026-05-04
 
 USER root
 WORKDIR /
 
-## Rerun apt intalls
-RUN apt-get update && apt-get install --no-install-recommends -y \
-        software-properties-common \
-        git && \
-    apt-get install --no-install-recommends -y gpg-agent && \
-    add-apt-repository -y ppa:ubuntugis/ubuntugis-unstable && \
-    apt-get update && \
-    apt-get upgrade -y
-
-RUN apt-get install --no-install-recommends --fix-missing -y \
-    zip \
-    unzip \
-    wget \
-    vim \
-    rsync \
-    less \
-    snaphu \
-    curl \
-    ca-certificates \
-    openssh-client \
-    libglx-mesa0 \
-    emacs \
-    gnupg2 \
-    jq \
-    gfortran \
-    make \
-    proj-bin \
-    geotiff-bin \
-    libshp-dev \
-    libshp4 \
-    libhdf5-dev \
-    libnetcdf-dev \
-    libgdal-dev \
-    libgsl-dev \
-    gdal-bin \
-    default-jdk-headless \
-    texlive-xetex \
-    texlive-fonts-recommended \
-    texlive-plain-generic \
-    csh \
-    autoconf \
-    make \
-    libtiff5-dev \
-    liblapack-dev \
-    libgmt-dev \
-    gmt-dcw \
-    gmt-gshhg \
-    gmt 
+# Copy over new files
+RUN cp -rn / /
 
 ## Re-run User configuration
 RUN chown -R jovyan:users "$HOME/" &&\
     addgroup -gid 599 elevation
 
 ## Copy other modified files
-COPY --from=builder /usr/local/bin/pixi /usr/local/bin/pixi
-COPY --from=builder /opt/conda/         /opt/conda/
-COPY --from=builder /usr/local/GMTSAR/  /usr/local/GMTSAR/
-COPY --from=builder /home/jovyan/       /home/jovyan/ 
 COPY --from=builder /etc/sudoers        /etc/sudoers
 
 ### GMTSAR
