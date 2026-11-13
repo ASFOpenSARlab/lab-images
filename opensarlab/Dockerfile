@@ -231,11 +231,11 @@ RUN chown -R jovyan:users "$HOME/" &&\
     addgroup -gid 599 elevation
 
 ## Copy other modified files
-COPY --from=release /usr/local/bin/pixi /usr/local/bin/pixi
-COPY --from=release /opt/conda/         /opt/conda/
-COPY --from=release /usr/local/GMTSAR/  /usr/local/GMTSAR/
-COPY --from=release /home/jovyan/       /home/jovyan/ 
-COPY --from=release /etc/sudoers        /etc/sudoers
+COPY --from=builder /usr/local/bin/pixi /usr/local/bin/pixi
+COPY --from=builder /opt/conda/         /opt/conda/
+COPY --from=builder /usr/local/GMTSAR/  /usr/local/GMTSAR/
+COPY --from=builder /home/jovyan/       /home/jovyan/ 
+COPY --from=builder /etc/sudoers        /etc/sudoers
 
 ### GMTSAR
 ENV PATH=/usr/local/GMTSAR/bin:$PATH
