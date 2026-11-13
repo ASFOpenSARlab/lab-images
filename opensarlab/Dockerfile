@@ -187,9 +187,9 @@ USER root
 WORKDIR /
 
 # Copy over modified directorys as unique layers 
-COPY /sys/ /sys/
-COPY /root/ /root/
-COPY /etc/ /etc/ 
+COPY --from=builder /sys/ /sys/
+COPY --from=builder /root/ /root/
+COPY --from=builder /etc/ /etc/ 
 
 ## Re-run User configuration
 RUN chown -R jovyan:users "$HOME/" &&\
