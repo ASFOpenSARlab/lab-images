@@ -33,6 +33,6 @@ jobs:
     with:
       image-name: opensarlab
       dockerfile: opensarlab/Dockerfile
-      push-to-aws: ${{ inputs.deploy_to_ecr }}
+      push-to-aws: ${{ inputs.deploy_to_ecr || false }}
       use-oidc: true
       role-to-assume: ${{ vars.OIDC_ROLE_ARN }}
