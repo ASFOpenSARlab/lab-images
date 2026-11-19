@@ -1,6 +1,8 @@
-FROM ghcr.io/asfopensarlab/deployment-opensarlab-container_sar:v1.3.2
+FROM ghcr.io/asfopensarlab/opensarlab:v1.1.1
 
 USER root
+
+RUN pip install igrf
 
 # Lab specific setup
 COPY geos631/hooks/geos631.sh /etc/user_server_includes/hooks/geos631.sh
