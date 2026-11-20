@@ -1,6 +1,6 @@
 # 2026-05-04 is JupyterLab v4.5.7
 # https://quay.io/repository/jupyter/base-notebook?tab=tags
-FROM quay.io/jupyter/base-notebook:2026-05-04 AS release
+FROM quay.io/jupyter/base-notebook:lab-4.6.6 AS release
 
 # Base Stage ****************************************************************
 USER root
@@ -19,7 +19,7 @@ RUN apt-get install --no-install-recommends -y \
         software-properties-common \
         git && \
     apt-get install --no-install-recommends -y gpg-agent && \
-    add-apt-repository -y ppa:ubuntugis/ubuntugis-unstable && \
+    # add-apt-repository -y ppa:ubuntugis/ubuntugis-unstable && \
     apt-get update && \
     apt-get upgrade -y
 
@@ -127,6 +127,8 @@ RUN python3 -m pip install --no-cache-dir  \
     playwright \
     ### For pyGMTSAR
     pygmtsar
+
+RUN python3 -m pip list --outdated | tail -n +3 | cut -d' ' -f 1 | xargs -n 1 pip install --upgrade
 
 RUN jupyter labextension disable @jupyter/collaboration-extension
 
