@@ -19,7 +19,6 @@ RUN apt-get install --no-install-recommends -y \
         software-properties-common \
         git && \
     apt-get install --no-install-recommends -y gpg-agent && \
-    # add-apt-repository -y ppa:ubuntugis/ubuntugis-unstable && \
     apt-get update && \
     apt-get upgrade -y
 
@@ -69,6 +68,9 @@ RUN apt-get install --no-install-recommends --fix-missing -y \
     gmt-gshhg \
     gmt \
     --
+
+RUN python3 -m pip install --no-cache-dir  \
+    pyjwt>=2.15.1
 
 # ignore DL3059 to make the two codeblocks distinct
 # hadolint ignore=DL3059
