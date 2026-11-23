@@ -144,7 +144,9 @@ RUN set -eux; \
 # reset PIXI_HOME to location on persistent volume after install for storing workspaces.toml
 ENV PIXI_HOME=/home/jovyan/.pixi
 
-COPY pixi.toml pixi.lock ./
+COPY pixi.toml ./
+
+COPY pixi.lock ./
 
 RUN pixi install
 
