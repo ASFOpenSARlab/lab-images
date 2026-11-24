@@ -145,7 +145,8 @@ RUN set -eux; \
 ENV PIXI_HOME=/home/jovyan/.pixi
 
 # put in temp
-COPY pixi.toml pixi.lock ./
+# COPY pixi.toml pixi.lock ./ #local
+COPY opensarlab/pixi.toml opensarlab/pixi.lock ./ #GitHub Building
 
 RUN pixi install
 
