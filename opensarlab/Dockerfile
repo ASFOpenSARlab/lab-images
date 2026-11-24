@@ -1,7 +1,6 @@
 # 2026-05-04 is JupyterLab v4.5.7
 # https://quay.io/repository/jupyter/base-notebook?tab=tags
-# FROM quay.io/jupyter/base-notebook:lab-4.6.6 AS builder
-FROM ghcr.io/prefix-dev/pixi:0.84.2 AS builder
+FROM quay.io/jupyter/base-notebook:lab-4.6.6 AS builder
 
 # Base Stage ****************************************************************
 USER root
@@ -70,68 +69,68 @@ RUN apt-get install --no-install-recommends --fix-missing -y \
     gmt \
     --
 
-# RUN python3 -m pip install --no-cache-dir  \
-#     pyjwt>=2.15.1
+RUN python3 -m pip install --no-cache-dir  \
+    pyjwt>=2.15.1
 
-# # ignore DL3059 to make the two codeblocks distinct
-# # hadolint ignore=DL3059
-# RUN mamba install -c conda-forge -y \
-#     ### Install plotting and general
-#     awscli \
-#     boto3 \
-#     pyyaml \
-#     bokeh \
-#     plotly \
-#     'pyopenssl>=23.0.0' \
-#     zstandard==0.25.0
+# ignore DL3059 to make the two codeblocks distinct
+# hadolint ignore=DL3059
+RUN mamba install -c conda-forge -y \
+    ### Install plotting and general
+    awscli \
+    boto3 \
+    pyyaml \
+    bokeh \
+    plotly \
+    'pyopenssl>=23.0.0' \
+    zstandard==0.25.0
 
-# # hadolint ignore=DL3059
-# RUN mamba install -c conda-forge -y \
-#     ### Install jupyter libaries
-#     kernda \
-#     jupyter-resource-usage \
-#     nb_conda_kernels \
-#     jupyterlab-spellchecker \
-#     ipympl \
-#     jupyterlab-h5web \
-#     jupyterlab_widgets \
-#     ipywidgets \
-#     #jupyter-ai \
-#     jupyterlab-git \
-#     # Coordinate with cluster dependency versions
-#     'jupyterhub>=5.4.6' \
-#     'jupyter_server>=2.18.0' \
-#     panel
+# hadolint ignore=DL3059
+RUN mamba install -c conda-forge -y \
+    ### Install jupyter libaries
+    kernda \
+    jupyter-resource-usage \
+    nb_conda_kernels \
+    jupyterlab-spellchecker \
+    ipympl \
+    jupyterlab-h5web \
+    jupyterlab_widgets \
+    ipywidgets \
+    #jupyter-ai \
+    jupyterlab-git \
+    # Coordinate with cluster dependency versions
+    'jupyterhub>=5.4.6' \
+    'jupyter_server>=2.18.0' \
+    panel
 
-# # hadolint ignore=DL3059
-# RUN mamba install -c conda-forge -y \
-#     ### Dask
-#     dask-gateway \
-#     dask \
-#     distributed \
-#     ipyleaflet \
-#     'jupyter-collaboration>=4.4.0' \
-#     'jupyter-collaboration-ui>=2.4.0' \
-#     jupytergis \
-#     --
+# hadolint ignore=DL3059
+RUN mamba install -c conda-forge -y \
+    ### Dask
+    dask-gateway \
+    dask \
+    distributed \
+    ipyleaflet \
+    'jupyter-collaboration>=4.4.0' \
+    'jupyter-collaboration-ui>=2.4.0' \
+    jupytergis \
+    --
 
-# # ignore DL3059 to make the two codeblocks distinct
-# # ignore DL3013 since pinning packages is not desired
-# # hadolint ignore=DL3013,DL3059
-# RUN python3 -m pip install --no-cache-dir  \
-#     ### For ASF
-#     url-widget \
-#     opensarlab-frontend==1.5.4 \
-#     jb-toc \
-#     nbgitpuller-jl-interface==1.1.1 \
-#     opensciencelab-tours==0.3.2 \
-#     mystmd \
-#     jupyterlab_myst \
-#     playwright \
-#     ### For pyGMTSAR
-#     pygmtsar
+# ignore DL3059 to make the two codeblocks distinct
+# ignore DL3013 since pinning packages is not desired
+# hadolint ignore=DL3013,DL3059
+RUN python3 -m pip install --no-cache-dir  \
+    ### For ASF
+    url-widget \
+    opensarlab-frontend==1.5.4 \
+    jb-toc \
+    nbgitpuller-jl-interface==1.1.1 \
+    opensciencelab-tours==0.3.2 \
+    mystmd \
+    jupyterlab_myst \
+    playwright \
+    ### For pyGMTSAR
+    pygmtsar
 
-# RUN python3 -m pip list --outdated | tail -n +3 | cut -d' ' -f 1 | xargs -n 1 pip install --upgrade
+RUN python3 -m pip list --outdated | tail -n +3 | cut -d' ' -f 1 | xargs -n 1 pip install --upgrade
 
 RUN jupyter labextension disable @jupyter/collaboration-extension
 
@@ -144,12 +143,6 @@ RUN set -eux; \
     pixi --version
 # reset PIXI_HOME to location on persistent volume after install for storing workspaces.toml
 ENV PIXI_HOME=/home/jovyan/.pixi
-
-# put in temp
-# COPY pixi.toml pixi.lock ./
-COPY ./opensarlab/pixi.toml ./opensarlab/pixi.lock ./
-
-RUN pixi install
 
 WORKDIR /
 
@@ -171,7 +164,7 @@ WORKDIR /
 # Make sure that any files in the home directory are jovyan permission
 RUN chown -R jovyan:users "$HOME/" &&\
     # Make sure mamba (within conda) has write access
-    # chmod -R 777 /opt/conda/pkgs/ &&\
+    chmod -R 777 /opt/conda/pkgs/ &&\
     # Make sure JupyterLab settings is writable
     mkdir -p /opt/conda/share/jupyter/lab/settings/ &&\
     chown jovyan:users /opt/conda/share/jupyter/lab/settings/ &&\
@@ -180,15 +173,9 @@ RUN chown -R jovyan:users "$HOME/" &&\
     addgroup -gid 599 elevation &&\
     echo '%elevation ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers &&\
     # Use the kernel display name `base` for the base conda environment
-    # mamba run -n base kernda --display-name base -o /opt/conda/share/jupyter/kernels/python3/kernel.json &&\
-    # mamba clean -y --all &&\
-    # mamba shell init -s bash --root-prefix=/opt/conda/ &&\
-    # pixi run kernda --display-name base -o /opt/conda/share/jupyter/kernels/python3/kernel.json &&\
-    # pixi clean cache
-    pixi run python -m ipykernel install \
-        # --prefix=/opt/conda \
-        --name=python3 \
-        --display-name="base" &&\
+    mamba run -n base kernda --display-name base -o /opt/conda/share/jupyter/kernels/python3/kernel.json &&\
+    mamba clean -y --all &&\
+    mamba shell init -s bash --root-prefix=/opt/conda/ &&\
     rm -rf /home/jovyan/..?* /home/jovyan/.[!.]* /home/jovyan/*
 
 # Clean things up
