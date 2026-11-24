@@ -179,15 +179,15 @@ RUN chown -R jovyan:users "$HOME/" &&\
     addgroup -gid 599 elevation &&\
     echo '%elevation ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers &&\
     # Use the kernel display name `base` for the base conda environment
-    mamba run -n base kernda --display-name base -o /opt/conda/share/jupyter/kernels/python3/kernel.json &&\
-    mamba clean -y --all &&\
-    mamba shell init -s bash --root-prefix=/opt/conda/ &&\
+    # mamba run -n base kernda --display-name base -o /opt/conda/share/jupyter/kernels/python3/kernel.json &&\
+    # mamba clean -y --all &&\
+    # mamba shell init -s bash --root-prefix=/opt/conda/ &&\
     # pixi run kernda --display-name base -o /opt/conda/share/jupyter/kernels/python3/kernel.json &&\
     # pixi clean cache
     pixi run python -m ipykernel install \
         # --prefix=/opt/conda \
-        --name=base2 \
-        --display-name="base2" &&\
+        --name=python3 \
+        --display-name="base" &&\
     rm -rf /home/jovyan/..?* /home/jovyan/.[!.]* /home/jovyan/*
 
 # Clean things up
