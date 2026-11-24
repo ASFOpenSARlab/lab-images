@@ -1,6 +1,7 @@
 # 2026-05-04 is JupyterLab v4.5.7
 # https://quay.io/repository/jupyter/base-notebook?tab=tags
-FROM quay.io/jupyter/base-notebook:lab-4.6.6 AS builder
+# FROM quay.io/jupyter/base-notebook:lab-4.6.6 AS builder
+FROM ghcr.io/prefix-dev/pixi:0.84.2 AS builder
 
 # Base Stage ****************************************************************
 USER root
@@ -145,8 +146,8 @@ RUN set -eux; \
 ENV PIXI_HOME=/home/jovyan/.pixi
 
 # put in temp
-# COPY pixi.toml pixi.lock ./ #local
-COPY ./opensarlab/pixi.toml ./opensarlab/pixi.lock ./
+COPY pixi.toml pixi.lock ./
+# COPY ./opensarlab/pixi.toml ./opensarlab/pixi.lock ./
 
 RUN pixi install
 
