@@ -146,7 +146,7 @@ ENV PIXI_HOME=/home/jovyan/.pixi
 
 # put in temp
 # COPY pixi.toml pixi.lock ./ #local
-COPY opensarlab/pixi.toml opensarlab/pixi.lock ./ #GitHub Building
+COPY ./opensarlab/pixi.toml ./opensarlab/pixi.lock ./
 
 RUN pixi install
 
@@ -185,7 +185,7 @@ RUN chown -R jovyan:users "$HOME/" &&\
     # pixi run kernda --display-name base -o /opt/conda/share/jupyter/kernels/python3/kernel.json &&\
     # pixi clean cache
     pixi run python -m ipykernel install \
-        --prefix=/opt/conda \
+        # --prefix=/opt/conda \
         --name=python3 \
         --display-name="base2" &&\
     rm -rf /home/jovyan/..?* /home/jovyan/.[!.]* /home/jovyan/*
