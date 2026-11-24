@@ -170,7 +170,7 @@ WORKDIR /
 # Make sure that any files in the home directory are jovyan permission
 RUN chown -R jovyan:users "$HOME/" &&\
     # Make sure mamba (within conda) has write access
-    chmod -R 777 /opt/conda/pkgs/ &&\
+    # chmod -R 777 /opt/conda/pkgs/ &&\
     # Make sure JupyterLab settings is writable
     mkdir -p /opt/conda/share/jupyter/lab/settings/ &&\
     chown jovyan:users /opt/conda/share/jupyter/lab/settings/ &&\
