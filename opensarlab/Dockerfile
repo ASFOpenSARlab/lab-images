@@ -145,9 +145,9 @@ RUN set -eux; \
 ENV PIXI_HOME=/home/jovyan/.pixi
 
 # put in temp
-# COPY pixi.toml pixi.lock ./
+COPY pixi.toml pixi.lock ./
 
-# RUN pixi install
+RUN pixi install
 
 WORKDIR /
 
@@ -184,10 +184,10 @@ RUN chown -R jovyan:users "$HOME/" &&\
     # pixi run kernda --display-name base -o /opt/conda/share/jupyter/kernels/python3/kernel.json &&\
     # pixi clean cache
     rm -rf /home/jovyan/..?* /home/jovyan/.[!.]* /home/jovyan/*
-    # pixi run python -m ipykernel install \
-    #   --prefix=/opt/conda \
-    #   --name=python3 \
-    #   --display-name="base"
+    pixi run python -m ipykernel install \
+        --prefix=/opt/conda \
+        --name=python3 \
+        --display-name="base2"
 
 # Clean things up
 RUN apt-get clean && \
