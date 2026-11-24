@@ -183,11 +183,11 @@ RUN chown -R jovyan:users "$HOME/" &&\
     mamba shell init -s bash --root-prefix=/opt/conda/ &&\
     # pixi run kernda --display-name base -o /opt/conda/share/jupyter/kernels/python3/kernel.json &&\
     # pixi clean cache
-    rm -rf /home/jovyan/..?* /home/jovyan/.[!.]* /home/jovyan/*
     pixi run python -m ipykernel install \
         --prefix=/opt/conda \
         --name=python3 \
-        --display-name="base2"
+        --display-name="base2" &&\
+    rm -rf /home/jovyan/..?* /home/jovyan/.[!.]* /home/jovyan/*
 
 # Clean things up
 RUN apt-get clean && \
