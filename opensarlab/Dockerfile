@@ -186,7 +186,7 @@ RUN chown -R jovyan:users "$HOME/" &&\
     # pixi clean cache
     pixi run python -m ipykernel install \
         # --prefix=/opt/conda \
-        --name=python3 \
+        --name=base2 \
         --display-name="base2" &&\
     rm -rf /home/jovyan/..?* /home/jovyan/.[!.]* /home/jovyan/*
 
