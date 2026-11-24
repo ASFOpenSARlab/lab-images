@@ -69,68 +69,68 @@ RUN apt-get install --no-install-recommends --fix-missing -y \
     gmt \
     --
 
-RUN python3 -m pip install --no-cache-dir  \
-    pyjwt>=2.15.1
+# RUN python3 -m pip install --no-cache-dir  \
+#     pyjwt>=2.15.1
 
-# ignore DL3059 to make the two codeblocks distinct
-# hadolint ignore=DL3059
-RUN mamba install -c conda-forge -y \
-    ### Install plotting and general
-    awscli \
-    boto3 \
-    pyyaml \
-    bokeh \
-    plotly \
-    'pyopenssl>=23.0.0' \
-    zstandard==0.25.0
+# # ignore DL3059 to make the two codeblocks distinct
+# # hadolint ignore=DL3059
+# RUN mamba install -c conda-forge -y \
+#     ### Install plotting and general
+#     awscli \
+#     boto3 \
+#     pyyaml \
+#     bokeh \
+#     plotly \
+#     'pyopenssl>=23.0.0' \
+#     zstandard==0.25.0
 
-# hadolint ignore=DL3059
-RUN mamba install -c conda-forge -y \
-    ### Install jupyter libaries
-    kernda \
-    jupyter-resource-usage \
-    nb_conda_kernels \
-    jupyterlab-spellchecker \
-    ipympl \
-    jupyterlab-h5web \
-    jupyterlab_widgets \
-    ipywidgets \
-    #jupyter-ai \
-    jupyterlab-git \
-    # Coordinate with cluster dependency versions
-    'jupyterhub>=5.4.6' \
-    'jupyter_server>=2.18.0' \
-    panel
+# # hadolint ignore=DL3059
+# RUN mamba install -c conda-forge -y \
+#     ### Install jupyter libaries
+#     kernda \
+#     jupyter-resource-usage \
+#     nb_conda_kernels \
+#     jupyterlab-spellchecker \
+#     ipympl \
+#     jupyterlab-h5web \
+#     jupyterlab_widgets \
+#     ipywidgets \
+#     #jupyter-ai \
+#     jupyterlab-git \
+#     # Coordinate with cluster dependency versions
+#     'jupyterhub>=5.4.6' \
+#     'jupyter_server>=2.18.0' \
+#     panel
 
-# hadolint ignore=DL3059
-RUN mamba install -c conda-forge -y \
-    ### Dask
-    dask-gateway \
-    dask \
-    distributed \
-    ipyleaflet \
-    'jupyter-collaboration>=4.4.0' \
-    'jupyter-collaboration-ui>=2.4.0' \
-    jupytergis \
-    --
+# # hadolint ignore=DL3059
+# RUN mamba install -c conda-forge -y \
+#     ### Dask
+#     dask-gateway \
+#     dask \
+#     distributed \
+#     ipyleaflet \
+#     'jupyter-collaboration>=4.4.0' \
+#     'jupyter-collaboration-ui>=2.4.0' \
+#     jupytergis \
+#     --
 
-# ignore DL3059 to make the two codeblocks distinct
-# ignore DL3013 since pinning packages is not desired
-# hadolint ignore=DL3013,DL3059
-RUN python3 -m pip install --no-cache-dir  \
-    ### For ASF
-    url-widget \
-    opensarlab-frontend==1.5.4 \
-    jb-toc \
-    nbgitpuller-jl-interface==1.1.1 \
-    opensciencelab-tours==0.3.2 \
-    mystmd \
-    jupyterlab_myst \
-    playwright \
-    ### For pyGMTSAR
-    pygmtsar
+# # ignore DL3059 to make the two codeblocks distinct
+# # ignore DL3013 since pinning packages is not desired
+# # hadolint ignore=DL3013,DL3059
+# RUN python3 -m pip install --no-cache-dir  \
+#     ### For ASF
+#     url-widget \
+#     opensarlab-frontend==1.5.4 \
+#     jb-toc \
+#     nbgitpuller-jl-interface==1.1.1 \
+#     opensciencelab-tours==0.3.2 \
+#     mystmd \
+#     jupyterlab_myst \
+#     playwright \
+#     ### For pyGMTSAR
+#     pygmtsar
 
-RUN python3 -m pip list --outdated | tail -n +3 | cut -d' ' -f 1 | xargs -n 1 pip install --upgrade
+# RUN python3 -m pip list --outdated | tail -n +3 | cut -d' ' -f 1 | xargs -n 1 pip install --upgrade
 
 RUN jupyter labextension disable @jupyter/collaboration-extension
 
