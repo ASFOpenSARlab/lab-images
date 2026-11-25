@@ -16,7 +16,7 @@ RUN apt-get update
 # ignore DL3009 since deleting apt-get lists makes later installs fail
 # hadolint ignore=DL3008,DL3009
 RUN apt-get install --no-install-recommends -y \
-        software-properties-common \
+        # software-properties-common \
         git && \
     apt-get install --no-install-recommends -y gpg-agent && \
     apt-get update && \
@@ -164,7 +164,7 @@ WORKDIR /
 # Make sure that any files in the home directory are jovyan permission
 RUN chown -R jovyan:users "$HOME/" &&\
     # Make sure mamba (within conda) has write access
-    # chmod -R 777 /opt/conda/pkgs/ &&\
+    chmod -R 777 /opt/conda/pkgs/ &&\
     # Make sure JupyterLab settings is writable
     mkdir -p /opt/conda/share/jupyter/lab/settings/ &&\
     chown jovyan:users /opt/conda/share/jupyter/lab/settings/ &&\
