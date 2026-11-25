@@ -1,6 +1,5 @@
-# 2026-05-04 is JupyterLab v4.5.7
 # https://quay.io/repository/jupyter/base-notebook?tab=tags
-FROM quay.io/jupyter/base-notebook:2026-05-04 AS builder
+FROM quay.io/jupyter/base-notebook:lab-4.6.6 AS builder
 
 # Base Stage ****************************************************************
 USER root
@@ -16,10 +15,8 @@ RUN apt-get update
 # ignore DL3009 since deleting apt-get lists makes later installs fail
 # hadolint ignore=DL3008,DL3009
 RUN apt-get install --no-install-recommends -y \
-        software-properties-common \
         git && \
     apt-get install --no-install-recommends -y gpg-agent && \
-    add-apt-repository -y ppa:ubuntugis/ubuntugis-unstable && \
     apt-get update && \
     apt-get upgrade -y
 
@@ -128,6 +125,8 @@ RUN python3 -m pip install --no-cache-dir  \
     ### For pyGMTSAR
     pygmtsar
 
+RUN python3 -m pip list --outdated | tail -n +3 | cut -d' ' -f 1 | xargs -n 1 pip install --upgrade
+
 RUN jupyter labextension disable @jupyter/collaboration-extension
 
 ENV PIXI_HOME=/usr/local/pixi
@@ -182,7 +181,7 @@ RUN apt-get clean && \
     conda clean --force-pkgs-dirs
 
 #### Stage 2: Copy over installed software
-FROM quay.io/jupyter/base-notebook:2026-05-04
+FROM quay.io/jupyter/base-notebook:lab-4.6.6
 
 USER root
 WORKDIR /

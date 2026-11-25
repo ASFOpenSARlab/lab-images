@@ -6,4 +6,8 @@
 !pkgs
 !pkgs/**
 !configs
-!configs/**
+!configs/**# pixi environments
+.pixi/*
+!.pixi/config.toml
+!pixi.lock
+!pixi.toml
