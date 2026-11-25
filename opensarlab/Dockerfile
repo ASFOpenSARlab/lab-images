@@ -1,4 +1,3 @@
-# 2026-05-04 is JupyterLab v4.5.7
 # https://quay.io/repository/jupyter/base-notebook?tab=tags
 FROM quay.io/jupyter/base-notebook:lab-4.6.6 AS builder
 
