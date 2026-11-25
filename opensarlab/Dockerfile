@@ -69,8 +69,8 @@ RUN apt-get install --no-install-recommends --fix-missing -y \
     gmt \
     --
 
-RUN python3 -m pip install --no-cache-dir  \
-    pyjwt>=2.15.1
+# RUN python3 -m pip install --no-cache-dir  \
+#     pyjwt>=2.15.1
 
 # ignore DL3059 to make the two codeblocks distinct
 # hadolint ignore=DL3059
@@ -164,7 +164,7 @@ WORKDIR /
 # Make sure that any files in the home directory are jovyan permission
 RUN chown -R jovyan:users "$HOME/" &&\
     # Make sure mamba (within conda) has write access
-    chmod -R 777 /opt/conda/pkgs/ &&\
+    # chmod -R 777 /opt/conda/pkgs/ &&\
     # Make sure JupyterLab settings is writable
     mkdir -p /opt/conda/share/jupyter/lab/settings/ &&\
     chown jovyan:users /opt/conda/share/jupyter/lab/settings/ &&\
@@ -185,27 +185,27 @@ RUN apt-get clean && \
     apt-get autoremove --purge && \
     conda clean --force-pkgs-dirs
 
-#### Stage 2: Copy over installed software
-FROM quay.io/jupyter/base-notebook:lab-4.6.6
+# #### Stage 2: Copy over installed software
+# FROM quay.io/jupyter/base-notebook:lab-4.6.6
 
-USER root
-WORKDIR /
+# USER root
+# WORKDIR /
 
-# Copy directories as unique layers for parallelism 
-COPY --from=builder /etc/ /etc/
-COPY --from=builder /home/ /home/
-COPY --from=builder /opt/ /opt/
-COPY --from=builder /root/ /root/
-COPY --from=builder /srv/ /srv/
-COPY --from=builder /sys/ /sys/
-COPY --from=builder /usr/ /usr/
-COPY --from=builder /var/ /var/ 
+# # Copy directories as unique layers for parallelism 
+# COPY --from=builder /etc/ /etc/
+# COPY --from=builder /home/ /home/
+# COPY --from=builder /opt/ /opt/
+# COPY --from=builder /root/ /root/
+# COPY --from=builder /srv/ /srv/
+# COPY --from=builder /sys/ /sys/
+# COPY --from=builder /usr/ /usr/
+# COPY --from=builder /var/ /var/ 
 
-### GMTSAR
-ENV PATH=/usr/local/GMTSAR/bin:$PATH
+# ### GMTSAR
+# ENV PATH=/usr/local/GMTSAR/bin:$PATH
 
-# reset PIXI_HOME to location on persistent volume after install for storing workspaces.toml
-ENV PIXI_HOME=/home/jovyan/.pixi
+# # reset PIXI_HOME to location on persistent volume after install for storing workspaces.toml
+# ENV PIXI_HOME=/home/jovyan/.pixi
 
-WORKDIR /home/jovyan
-USER jovyan
+# WORKDIR /home/jovyan
+# USER jovyan
